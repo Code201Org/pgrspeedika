@@ -30,13 +30,13 @@ export function catalogRoutes(ctx: AppContext) {
       .use("/api/catalog/*", async (c, next) => {
         await next();
         if (c.req.method === "GET" && c.res.status === 200) {
-          c.res.headers.set("Cache-Control", "public, max-age=60, stale-while-revalidate=300");
+          c.res.headers.set("Cache-Control", "public, max-age=120, stale-while-revalidate=600");
         }
       })
       .use("/api/shop", async (c, next) => {
         await next();
         if (c.req.method === "GET" && c.res.status === 200) {
-          c.res.headers.set("Cache-Control", "public, max-age=60, stale-while-revalidate=300");
+          c.res.headers.set("Cache-Control", "public, max-age=120, stale-while-revalidate=600");
         }
       })
       .get("/api/shop", async (c) => {

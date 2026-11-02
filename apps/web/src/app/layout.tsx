@@ -37,8 +37,17 @@ export const viewport: Viewport = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  // Warm the connection to the API origin before any client fetch needs it
+  // (saves a DNS+TCP+TLS round trip on the first catalog load).
+  let apiOrigin: string | null = null;
+  try {
+    apiOrigin = new URL(process.env.NEXT_PUBLIC_API_URL ?? "").origin;
+  } catch {
+    apiOrigin = null;
+  }
   return (
     <html lang="en">
+      <head>{apiOrigin ? <link rel="preconnect" href={apiOrigin} crossOrigin="anonymous" /> : null}</head>
       <body>
         <Providers>
           <a href="#main" className="skip-link">

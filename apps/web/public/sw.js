@@ -1,6 +1,6 @@
 /* PGRS Peedika service worker — offline shell (cache-first for static assets,
    network-first navigations with an offline fallback). */
-const VERSION = "pgrs-v3-whatsapp";
+const VERSION = "pgrs-v4-photo-cache";
 const OFFLINE_URLS = ["/", "/about", "/contact", "/faq"];
 
 self.addEventListener("install", (event) => {
@@ -41,6 +41,26 @@ self.addEventListener("fetch", (event) => {
           return response;
         })
         .catch(() => caches.match(request).then((cached) => cached ?? caches.match("/"))),
+    );
+    return;
+  }
+
+  // Catalog photos: serve instantly from cache, refresh the copy in the
+  // background (stale-while-revalidate). Revisiting pages costs no image data.
+  if (url.pathname.startsWith("/catalog/photos/")) {
+    event.respondWith(
+      caches.match(request).then((cached) => {
+        const network = fetch(request)
+          .then((response) => {
+            if (response.ok) {
+              const copy = response.clone();
+              caches.open(VERSION).then((cache) => cache.put(request, copy));
+            }
+            return response;
+          })
+          .catch(() => cached);
+        return cached ?? network;
+      }),
     );
     return;
   }

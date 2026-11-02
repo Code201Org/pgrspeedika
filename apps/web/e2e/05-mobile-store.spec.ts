@@ -15,7 +15,7 @@ async function ownerLogin(page: Page) {
   await page.waitForURL(/dashboard/);
 }
 
-test("small phone app navigation, shared quantities, stock limit and append-only catalog paging", async ({
+test("small phone app navigation, shared quantities, stock limit and numbered catalog paging", async ({
   page,
 }, testInfo) => {
   await page.setViewportSize({ width: 320, height: 740 });
@@ -31,8 +31,12 @@ test("small phone app navigation, shared quantities, stock limit and append-only
   await expect(first.getByRole("group")).toContainText("2");
   await expect(page.getByRole("link", { name: "View basket, 2 items", exact: true })).toBeVisible();
   await noOverflow(page);
-  await page.getByRole("button", { name: "Load more", exact: true }).click();
-  await expect(page.getByRole("article")).toHaveCount(40);
+  // Numbered pagination swaps in only the next 20 cards (less data + DOM than appending).
+  await page.getByRole("button", { name: "Page 2", exact: true }).click();
+  await expect(page).toHaveURL(/page=2/);
+  await expect(page.getByRole("article")).toHaveCount(20);
+  await page.getByRole("button", { name: "Page 1", exact: true }).click();
+  await expect(page).toHaveURL(/\/shop(?:\?|$)/);
   await expect(page.getByRole("article", { name: name!, exact: true }).getByRole("group")).toContainText("2");
   await page.reload();
   await expect(page.getByRole("article", { name: name!, exact: true }).getByRole("group")).toContainText("2");

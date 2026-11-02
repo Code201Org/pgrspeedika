@@ -1,9 +1,9 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useQuery, keepPreviousData } from "@tanstack/react-query";
+import { useRef, useState } from "react";
 import { SlidersHorizontal } from "lucide-react";
 import { Button, EmptyState, Select, Skeleton } from "@pgrs/ui";
 import type { Category, ListProductsQuery, Paginated, ProductCard as ProductCardData } from "@pgrs/contracts";
@@ -11,7 +11,22 @@ import { api, unwrap } from "@/lib/api";
 import { useUIStore } from "@/store/ui";
 import { ProductCard } from "./product-card";
 
-/** Shared catalog browser: filters, sort, and a load-more list. */
+const PAGE_SIZE = 20;
+
+/** Compact page list: all numbers when few pages, otherwise first/last + a window around current. */
+function pageList(page: number, pageCount: number): Array<number | "…"> {
+  if (pageCount <= 7) return Array.from({ length: pageCount }, (_, i) => i + 1);
+  const out: Array<number | "…"> = [1];
+  const from = Math.max(2, page - 1);
+  const to = Math.min(pageCount - 1, page + 1);
+  if (from > 2) out.push("…");
+  for (let n = from; n <= to; n++) out.push(n);
+  if (to < pageCount - 1) out.push("…");
+  out.push(pageCount);
+  return out;
+}
+
+/** Shared catalog browser: filters, sort, and numbered pagination kept in the URL. */
 export function CatalogBrowser({
   title,
   subtitle,
@@ -24,33 +39,53 @@ export function CatalogBrowser({
   const lang = useUIStore((s) => s.lang);
   const t = (en: string, ml: string) => (lang === "en" ? en : ml);
   const router = useRouter();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
+  const gridRef = useRef<HTMLDivElement>(null);
 
   const [sort, setSort] = useState<ListProductsQuery["sort"]>("popular");
   const [inStock, setInStock] = useState(false);
   const [freshOnly, setFreshOnly] = useState(searchParams.get("fresh") === "1");
+  const page = Math.max(1, Number(searchParams.get("page")) || 1);
   const filters = {
     ...baseQuery,
     sort,
     ...(inStock ? { inStock: true } : {}),
     ...(freshOnly ? { freshToday: true } : {}),
   };
-  const catalog = useInfiniteQuery({
-    queryKey: ["products", filters],
-    initialPageParam: 1,
-    queryFn: ({ pageParam }) =>
+
+  function goToPage(next: number) {
+    const params = new URLSearchParams(searchParams.toString());
+    if (next <= 1) params.delete("page");
+    else params.set("page", String(next));
+    const qs = params.toString();
+    router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
+    gridRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+  function resetToFirstPage() {
+    if (page > 1) {
+      const params = new URLSearchParams(searchParams.toString());
+      params.delete("page");
+      const qs = params.toString();
+      router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
+    }
+  }
+
+  const catalog = useQuery({
+    queryKey: ["products", filters, page],
+    queryFn: () =>
       unwrap<Paginated<ProductCardData>>(
-        api.api.catalog.products.$get({ query: { ...filters, page: pageParam, pageSize: 20 } }),
+        api.api.catalog.products.$get({ query: { ...filters, page, pageSize: PAGE_SIZE } }),
       ),
-    getNextPageParam: (last) => (last.page < last.pageCount ? last.page + 1 : undefined),
+    placeholderData: keepPreviousData,
   });
   const categories = useQuery({
     queryKey: ["categories"],
     queryFn: () => unwrap<Category[]>(api.api.catalog.categories.$get()),
   });
-  const items = catalog.data?.pages.flatMap((page) => page.items) ?? [];
-  const isLoading = catalog.isLoading;
-  const hasMore = catalog.hasNextPage;
+  const items = catalog.data?.items ?? [];
+  const pageCount = catalog.data?.pageCount ?? 1;
+  const isLoading = catalog.isLoading || catalog.isPlaceholderData;
 
   return (
     <div className="container-page space-y-5 py-6">
@@ -81,7 +116,10 @@ export function CatalogBrowser({
         <button
           type="button"
           aria-pressed={inStock}
-          onClick={() => setInStock((v) => !v)}
+          onClick={() => {
+            setInStock((v) => !v);
+            resetToFirstPage();
+          }}
           className={
             inStock
               ? "min-h-11 rounded-full bg-primary px-3 py-1.5 text-xs font-bold text-white"
@@ -93,7 +131,10 @@ export function CatalogBrowser({
         <button
           type="button"
           aria-pressed={freshOnly}
-          onClick={() => setFreshOnly((v) => !v)}
+          onClick={() => {
+            setFreshOnly((v) => !v);
+            resetToFirstPage();
+          }}
           className={
             freshOnly
               ? "min-h-11 rounded-full bg-primary px-3 py-1.5 text-xs font-bold text-white"
@@ -109,7 +150,10 @@ export function CatalogBrowser({
           <Select
             id="sort"
             value={sort}
-            onChange={(e) => setSort(e.target.value as ListProductsQuery["sort"])}
+            onChange={(e) => {
+              setSort(e.target.value as ListProductsQuery["sort"]);
+              resetToFirstPage();
+            }}
             className="w-40 py-1.5 text-xs"
           >
             <option value="popular">{t("Popular", "പ്രിയപ്പെട്ടത്")}</option>
@@ -149,25 +193,63 @@ export function CatalogBrowser({
           }
         />
       ) : (
-        <>
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
-            {items.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
-          {hasMore ? (
-            <div className="flex justify-center">
-              <Button
-                variant="outline"
-                loading={catalog.isFetchingNextPage}
-                onClick={() => catalog.fetchNextPage()}
-              >
-                {t("Load more", "കൂടുതൽ കാണുക")}
-              </Button>
-            </div>
-          ) : null}
-        </>
+        <div ref={gridRef} className="grid scroll-mt-20 grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+          {items.map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </div>
       )}
+
+      {pageCount > 1 ? (
+        <nav
+          aria-label={t("Pagination", "താളുകൾ")}
+          className="flex flex-wrap items-center justify-center gap-1.5 pt-2"
+        >
+          <Button
+            variant="outline"
+            disabled={page <= 1}
+            onClick={() => goToPage(page - 1)}
+            aria-label={t("Previous page", "മുൻപത്തെ താൾ")}
+            className="min-h-11"
+          >
+            ‹ {t("Prev", "മുൻ")}
+          </Button>
+          {pageList(page, pageCount).map((n, i) =>
+            n === "…" ? (
+              <span key={`gap-${i}`} className="px-1 text-sm text-muted" aria-hidden>
+                …
+              </span>
+            ) : (
+              <button
+                key={n}
+                type="button"
+                onClick={() => goToPage(n)}
+                aria-current={n === page ? "page" : undefined}
+                aria-label={t(`Page ${n}`, `താൾ ${n}`)}
+                className={`min-h-11 min-w-11 rounded-full px-3 text-sm font-bold ${
+                  n === page
+                    ? "border border-primary bg-primary text-white"
+                    : "border border-line bg-white text-ink hover:border-primary-300"
+                }`}
+              >
+                {n}
+              </button>
+            ),
+          )}
+          <Button
+            variant="outline"
+            disabled={page >= pageCount}
+            onClick={() => goToPage(page + 1)}
+            aria-label={t("Next page", "അടുത്ത താൾ")}
+            className="min-h-11"
+          >
+            {t("Next", "അടുത്തത്")} ›
+          </Button>
+          <p className="w-full pt-1 text-center text-xs text-muted">
+            {t(`Page ${page} of ${pageCount}`, `${pageCount} താളുകളിൽ ${page}`)}
+          </p>
+        </nav>
+      ) : null}
     </div>
   );
 }

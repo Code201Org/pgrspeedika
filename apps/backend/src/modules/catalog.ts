@@ -1,5 +1,6 @@
 import { newHono } from "../lib/hono";
 import { zValidator } from "@hono/zod-validator";
+import { compress } from "hono/compress";
 import { and, desc, eq } from "drizzle-orm";
 import { listProductsQuerySchema, shopSettingsSchema } from "@pgrs/contracts";
 import { products, reviews, settings, user } from "@pgrs/db";
@@ -17,6 +18,27 @@ import { productRatingSummary } from "../services/catalog";
 export function catalogRoutes(ctx: AppContext) {
   return (
     newHono()
+      // Public catalog reads change only when the shop edits prices/stock:
+      // let guest browsers reuse responses for a minute (stale-while-revalidate
+      // after) — repeat visits become instant and use no mobile data.
+      // Scoped to explicit paths: a pathless .use() on a "/"-mounted sub-app
+      // would also stamp these headers onto admin/auth responses.
+      // gzip catalog JSON (~5x smaller on the wire). Path-scoped like above —
+      // admin/auth/checkout responses keep byte-for-byte behavior.
+      .use("/api/catalog/*", compress())
+      .use("/api/shop", compress())
+      .use("/api/catalog/*", async (c, next) => {
+        await next();
+        if (c.req.method === "GET" && c.res.status === 200) {
+          c.res.headers.set("Cache-Control", "public, max-age=60, stale-while-revalidate=300");
+        }
+      })
+      .use("/api/shop", async (c, next) => {
+        await next();
+        if (c.req.method === "GET" && c.res.status === 200) {
+          c.res.headers.set("Cache-Control", "public, max-age=60, stale-while-revalidate=300");
+        }
+      })
       .get("/api/shop", async (c) => {
         const [row] = await ctx.db.select().from(settings).where(eq(settings.key, "shop.profile"));
         const parsed = shopSettingsSchema.safeParse(row?.value ?? {});

@@ -146,9 +146,12 @@ const loose = (
 export const seedLooseProducts: SeedLooseProduct[] = [
   // ── Vegetables (36 items; prices ≈ Kerala market, Oct 2026) ───────────────
   loose("tomato", "Tomato", "തക്കാളി", "vegetables", "🍅", 3500, "0702", { freshToday: true }),
-  loose("big-onion", "Onion (Big)", "വലിയ ഉള്ളി", "vegetables", "🧅", 4200, "0703", { freshToday: true }),
-  loose("shallots", "Shallots", "ചെറുള്ളി", "vegetables", "🧅", 9500, "0703", {
-    keywords: "small onion kunjulli cherulli",
+  loose("big-onion", "Onion (Big)", "വലിയ ഉള്ളി", "vegetables", "🧅", 5500, "0703", {
+    keywords: "savola savala onion big",
+    freshToday: true,
+  }),
+  loose("shallots", "Shallots", "ചെറുള്ളി", "vegetables", "🧅", 9000, "0703", {
+    keywords: "small onion kunjulli cherulli ulli",
   }),
   loose("potato", "Potato", "ഉരുളക്കിഴങ്ങ്", "vegetables", "🥔", 3400, "0701"),
   loose("green-chilli", "Green Chilli", "പച്ചമുളക്", "vegetables", "🌶️", 7000, "0709", {
@@ -168,7 +171,9 @@ export const seedLooseProducts: SeedLooseProduct[] = [
   loose("ginger", "Ginger", "ഇഞ്ഞി", "vegetables", "🫚", 14000, "0910", {
     description: "Fresh Inji, cleaned and weighed loose.",
   }),
-  loose("garlic", "Garlic", "വെളുത്തുള്ളി", "vegetables", "🧄", 17000, "0709"),
+  loose("garlic", "Garlic", "വെളുത്തുള്ളി", "vegetables", "🧄", 25000, "0709", {
+    steps: [100, 250, 500, 1000],
+  }),
   loose("carrot", "Carrot", "കാരറ്റ്", "vegetables", "🥕", 6000, "0706", { freshToday: true }),
   loose("beetroot", "Beetroot", "ബീറ്റ്റൂട്ട്", "vegetables", "🫒", 4500, "0706"),
   loose("cauliflower", "Cauliflower", "കോളിഫ്ലവർ", "vegetables", "🥦", 5500, "0704"),
@@ -204,6 +209,18 @@ export const seedLooseProducts: SeedLooseProduct[] = [
   }),
   loose("tapioca", "Tapioca", "കപ്പ", "vegetables", "🥔", 3800, "0714", {
     keywords: "kappa yuca cassava",
+    freshToday: true,
+  }),
+  loose("kappa-vatta", "Kappa (Vatta)", "വട്ടക്കപ്പ", "vegetables", "🥔", 7000, "0714", {
+    keywords: "vatta kappa tapioca cassava round",
+    freshToday: true,
+  }),
+  loose("kappa-nice", "Kappa (Nice)", "നൈസ് കപ്പ", "vegetables", "🥔", 10000, "0714", {
+    keywords: "nice kappa tapioca cassava",
+    freshToday: true,
+  }),
+  loose("kappa-kotthe", "Kappa (Kotthe)", "കൊത്തെക്കപ്പ", "vegetables", "🥔", 8000, "0714", {
+    keywords: "kotthe kothan kappa tapioca cassava",
     freshToday: true,
   }),
   loose("capsicum", "Capsicum", "ക്യാപ്സിക്കം", "vegetables", "🫑", 8500, "0709"),
@@ -331,6 +348,10 @@ export const seedLooseProducts: SeedLooseProduct[] = [
     steps: [100, 250, 500],
     step: 100,
   }),
+
+  // ── Loose staples (sold by weight from sacks) ──────────────────────────────
+  loose("atta-loose", "Atta (Loose)", "ഗോതമ്പിപ്പൊടി (ഉണക്ക)", "rice-and-grains", "🌾", 4500, "1101"),
+  loose("rava-loose", "Rava (Loose)", "റവ (ഉണക്ക)", "rice-and-grains", "🌾", 5000, "1103"),
 ];
 
 const packed = (
@@ -425,23 +446,127 @@ export const seedPackedProducts: SeedPackedProduct[] = [
   packed("idiyappam-podi", "Idiyappam Podi", "ഇടിയപ്പപ്പൊടി", "rice-and-grains", "🍚", "1106", 5, [
     { labelEn: "1 kg", labelMl: "1 കി.ഗ്രാം", quantity: 1000, unitType: "weight", pricePaise: 8000 },
   ]),
-  packed("toor-dal", "Toor Dal", "തുവര പരിപ്പ്", "rice-and-grains", "🫘", "0713", 5, [
-    { labelEn: "500 g", labelMl: "500 ഗ്രാം", quantity: 500, unitType: "weight", pricePaise: 8000 },
-    { labelEn: "1 kg", labelMl: "1 കി.ഗ്രാം", quantity: 1000, unitType: "weight", pricePaise: 16000 },
+  packed("toor-dal", "Toor Dal (Red Parippu)", "തുവര പരിപ്പ്", "rice-and-grains", "🫘", "0713", 5, [
+    { labelEn: "500 g", labelMl: "500 ഗ്രാം", quantity: 500, unitType: "weight", pricePaise: 5000 },
+    { labelEn: "1 kg", labelMl: "1 കി.ഗ്രാം", quantity: 1000, unitType: "weight", pricePaise: 10000 },
   ]),
-  packed("chana-dal", "Chana Dal", "കടല പരിപ്പ്", "rice-and-grains", "🫘", "0713", 5, [
-    { labelEn: "500 g", labelMl: "500 ഗ്രാം", quantity: 500, unitType: "weight", pricePaise: 6000 },
-    { labelEn: "1 kg", labelMl: "1 കി.ഗ്രാം", quantity: 1000, unitType: "weight", pricePaise: 12000 },
+  packed("chana-dal", "Chana Dal (Kadala Parippu)", "കടല പരിപ്പ്", "rice-and-grains", "🫘", "0713", 5, [
+    { labelEn: "500 g", labelMl: "500 ഗ്രാം", quantity: 500, unitType: "weight", pricePaise: 5500 },
+    { labelEn: "1 kg", labelMl: "1 കി.ഗ്രാം", quantity: 1000, unitType: "weight", pricePaise: 11000 },
   ]),
   packed("moong-dal", "Moong Dal", "മസൂർ പരിപ്പ്", "rice-and-grains", "🫘", "0713", 5, [
     { labelEn: "500 g", labelMl: "500 ഗ്രാം", quantity: 500, unitType: "weight", pricePaise: 7000 },
   ]),
-  packed("urad-dal", "Urad Dal (Split)", "ഉഴുന്ന പരിപ്പ്", "rice-and-grains", "🫘", "0713", 5, [
-    { labelEn: "500 g", labelMl: "500 ഗ്രാം", quantity: 500, unitType: "weight", pricePaise: 9000 },
+  packed("urad-dal", "Urad Dal Split (Vada Parippu)", "ഉഴുന്ന പരിപ്പ്", "rice-and-grains", "🫘", "0713", 5, [
+    { labelEn: "500 g", labelMl: "500 ഗ്രാം", quantity: 500, unitType: "weight", pricePaise: 4000 },
+    { labelEn: "1 kg", labelMl: "1 കി.ഗ്രാം", quantity: 1000, unitType: "weight", pricePaise: 8000 },
   ]),
   packed("rava", "Wheat Rava", "റവ", "rice-and-grains", "🌾", "1103", 5, [
+    { labelEn: "500 g", labelMl: "500 ഗ്രാം", quantity: 500, unitType: "weight", pricePaise: 4000 },
+    { labelEn: "1 kg", labelMl: "1 കി.ഗ്രാം", quantity: 1000, unitType: "weight", pricePaise: 7500 },
+  ]),
+  packed("vanpayar", "Cowpea (Vanpayar)", "വൻപയർ", "rice-and-grains", "🫘", "0713", 5, [
+    { labelEn: "500 g", labelMl: "500 ഗ്രാം", quantity: 500, unitType: "weight", pricePaise: 6000 },
+    { labelEn: "1 kg", labelMl: "1 കി.ഗ്രാം", quantity: 1000, unitType: "weight", pricePaise: 12000 },
+  ]),
+  packed("cherupayar", "Green Gram (Cherupayar)", "ചെറുപയർ", "rice-and-grains", "🫘", "0713", 5, [
+    { labelEn: "500 g", labelMl: "500 ഗ്രാം", quantity: 500, unitType: "weight", pricePaise: 7000 },
+    { labelEn: "1 kg", labelMl: "1 കി.ഗ്രാം", quantity: 1000, unitType: "weight", pricePaise: 14000 },
+  ]),
+  packed(
+    "uzhunnu-black",
+    "Black Gram Whole (Uzhunnu)",
+    "ഉഴുന്ന് (കറുത്ത)",
+    "rice-and-grains",
+    "🫘",
+    "0713",
+    5,
+    [
+      { labelEn: "500 g", labelMl: "500 ഗ്രാം", quantity: 500, unitType: "weight", pricePaise: 7500 },
+      { labelEn: "1 kg", labelMl: "1 കി.ഗ്രാം", quantity: 1000, unitType: "weight", pricePaise: 15000 },
+    ],
+  ),
+  packed("green-peas-dried", "Green Peas (Dried)", "ഉണങ്ങിയ ബടാണി", "rice-and-grains", "🫛", "0713", 5, [
+    { labelEn: "500 g", labelMl: "500 ഗ്രാം", quantity: 500, unitType: "weight", pricePaise: 4000 },
+    { labelEn: "1 kg", labelMl: "1 കി.ഗ്രാം", quantity: 1000, unitType: "weight", pricePaise: 8000 },
+  ]),
+  packed("ragi", "Ragi (Finger Millet)", "റാഗി", "rice-and-grains", "🌾", "1008", 5, [
     { labelEn: "1 kg", labelMl: "1 കി.ഗ്രാം", quantity: 1000, unitType: "weight", pricePaise: 6000 },
   ]),
+  packed("thina", "Thina (Foxtail Millet)", "തിന", "rice-and-grains", "🌾", "1008", 5, [
+    { labelEn: "1 kg", labelMl: "1 കി.ഗ്രാം", quantity: 1000, unitType: "weight", pricePaise: 6000 },
+  ]),
+  packed("kuthari", "Kuthari Rice", "കുത്താരി അരി", "rice-and-grains", "🍚", "1006", 5, [
+    { labelEn: "1 kg", labelMl: "1 കി.ഗ്രാം", quantity: 1000, unitType: "weight", pricePaise: 6000 },
+  ]),
+  packed("rice-surekha", "Surekha Rice", "സുരേഖ അരി", "rice-and-grains", "🍚", "1006", 5, [
+    { labelEn: "1 kg", labelMl: "1 കി.ഗ്രാം", quantity: 1000, unitType: "weight", pricePaise: 5200 },
+  ]),
+  packed("rice-jaya", "Jaya Rice", "ജയ അരി", "rice-and-grains", "🍚", "1006", 5, [
+    { labelEn: "1 kg", labelMl: "1 കി.ഗ്രാം", quantity: 1000, unitType: "weight", pricePaise: 5000 },
+  ]),
+  packed("rice-nirmal", "Nirmal Rice (Matta)", "നിർമൽ അരി", "rice-and-grains", "🍚", "1006", 5, [
+    { labelEn: "5 kg", labelMl: "5 കി.ഗ്രാം", quantity: 5000, unitType: "weight", pricePaise: 32500 },
+    { labelEn: "10 kg", labelMl: "10 കി.ഗ്രാം", quantity: 10000, unitType: "weight", pricePaise: 64000 },
+  ]),
+  packed(
+    "rice-kuthuvilakku",
+    "Kuthuvilakku Rice (Matta)",
+    "കുത്തുവിളക്ക് അരി",
+    "rice-and-grains",
+    "🍚",
+    "1006",
+    5,
+    [
+      { labelEn: "5 kg", labelMl: "5 കി.ഗ്രാം", quantity: 5000, unitType: "weight", pricePaise: 32500 },
+      { labelEn: "10 kg", labelMl: "10 കി.ഗ്രാം", quantity: 10000, unitType: "weight", pricePaise: 64000 },
+    ],
+  ),
+  packed("rice-pavizham", "Pavizham Rice (Matta)", "പവിഴം അരി", "rice-and-grains", "🍚", "1006", 5, [
+    { labelEn: "5 kg", labelMl: "5 കി.ഗ്രാം", quantity: 5000, unitType: "weight", pricePaise: 32500 },
+    { labelEn: "10 kg", labelMl: "10 കി.ഗ്രാം", quantity: 10000, unitType: "weight", pricePaise: 64000 },
+  ]),
+  packed("maida", "Maida", "മൈദ", "rice-and-grains", "🌾", "1101", 5, [
+    { labelEn: "1 kg", labelMl: "1 കി.ഗ്രാം", quantity: 1000, unitType: "weight", pricePaise: 4800 },
+  ]),
+  packed("rcm-atta", "RCM Atta", "ആർ.സി.എം. അട്ട", "rice-and-grains", "🌾", "1101", 5, [
+    { labelEn: "1 kg", labelMl: "1 കി.ഗ്രാം", quantity: 1000, unitType: "weight", pricePaise: 6500 },
+    { labelEn: "5 kg", labelMl: "5 കി.ഗ്രാം", quantity: 5000, unitType: "weight", pricePaise: 30000 },
+  ]),
+  packed("aashirvaad-atta", "Aashirvaad Atta", "ആശിർവാദ് അട്ട", "rice-and-grains", "🌾", "1101", 5, [
+    { labelEn: "1 kg", labelMl: "1 കി.ഗ്രാം", quantity: 1000, unitType: "weight", pricePaise: 7000 },
+    { labelEn: "5 kg", labelMl: "5 കി.ഗ്രാം", quantity: 5000, unitType: "weight", pricePaise: 34000 },
+    { labelEn: "10 kg", labelMl: "10 കി.ഗ്രാം", quantity: 10000, unitType: "weight", pricePaise: 62000 },
+  ]),
+  packed("ajmi-rice-podi", "Ajmi Rice Powder", "അജ്മി അരിപ്പൊടി", "rice-and-grains", "🍚", "1106", 5, [
+    { labelEn: "500 g", labelMl: "500 ഗ്രാം", quantity: 500, unitType: "weight", pricePaise: 4000 },
+    { labelEn: "1 kg", labelMl: "1 കി.ഗ്രാം", quantity: 1000, unitType: "weight", pricePaise: 7500 },
+  ]),
+  packed("ajmi-puttu-podi", "Ajmi Puttu Podi", "അജ്മി പുട്ടുപ്പൊടി", "rice-and-grains", "🍚", "1106", 5, [
+    { labelEn: "500 g", labelMl: "500 ഗ്രാം", quantity: 500, unitType: "weight", pricePaise: 4500 },
+    { labelEn: "1 kg", labelMl: "1 കി.ഗ്രാം", quantity: 1000, unitType: "weight", pricePaise: 8000 },
+  ]),
+  packed("chemba-puttu-podi", "Chemba Puttu Podi", "ചെമ്പ പുട്ടുപ്പൊടി", "rice-and-grains", "🍚", "1106", 5, [
+    { labelEn: "500 g", labelMl: "500 ഗ്രാം", quantity: 500, unitType: "weight", pricePaise: 4000 },
+    { labelEn: "1 kg", labelMl: "1 കി.ഗ്രാം", quantity: 1000, unitType: "weight", pricePaise: 8000 },
+  ]),
+  packed("kappa-podi", "Kappa Podi (Nadan)", "കപ്പപ്പൊടി", "rice-and-grains", "🍚", "1106", 5, [
+    { labelEn: "100 g", labelMl: "100 ഗ്രാം", quantity: 100, unitType: "weight", pricePaise: 7500 },
+    { labelEn: "250 g", labelMl: "250 ഗ്രാം", quantity: 250, unitType: "weight", pricePaise: 19000 },
+  ]),
+  packed(
+    "kappa-podi-thripthi",
+    "Thripthi Nadan Kappa Podi",
+    "തൃപ്തി നാടൻ കപ്പപ്പൊടി",
+    "rice-and-grains",
+    "🍚",
+    "1106",
+    5,
+    [
+      { labelEn: "100 g", labelMl: "100 ഗ്രാം", quantity: 100, unitType: "weight", pricePaise: 8000 },
+      { labelEn: "250 g", labelMl: "250 ഗ്രാം", quantity: 250, unitType: "weight", pricePaise: 20000 },
+    ],
+  ),
 
   // ── Spices ────────────────────────────────────────────────────────────────
   packed("chilli-powder", "Chilli Powder", "മുളക് പൊടി", "spices", "🌶️", "0904", 5, [
@@ -492,6 +617,33 @@ export const seedPackedProducts: SeedPackedProduct[] = [
   ]),
   packed("garam-masala", "Garam Masala", "ഗരം മസാല", "spices", "🧂", "0910", 5, [
     { labelEn: "100 g", labelMl: "100 ഗ്രാം", quantity: 100, unitType: "weight", pricePaise: 9500 },
+  ]),
+  packed("mulak-vattal", "Dry Red Chilli (Vattal Mulaku)", "വറ്റൽ മുളക്", "spices", "🌶️", "0904", 5, [
+    { labelEn: "250 g", labelMl: "250 ഗ്രാം", quantity: 250, unitType: "weight", pricePaise: 8800 },
+    { labelEn: "1 kg", labelMl: "1 കി.ഗ്രാം", quantity: 1000, unitType: "weight", pricePaise: 35000 },
+  ]),
+  packed("mulak-piriyan", "Bird's Eye Chilli (Piriyan)", "പിരിയൻ മുളക്", "spices", "🌶️", "0904", 5, [
+    { labelEn: "250 g", labelMl: "250 ഗ്രാം", quantity: 250, unitType: "weight", pricePaise: 10000 },
+    { labelEn: "1 kg", labelMl: "1 കി.ഗ്രാം", quantity: 1000, unitType: "weight", pricePaise: 40000 },
+  ]),
+  packed("mulak-kashmiri", "Kashmiri Chilli (Dried)", "കാശ്മിരി മുളക്", "spices", "🌶️", "0904", 5, [
+    { labelEn: "250 g", labelMl: "250 ഗ്രാം", quantity: 250, unitType: "weight", pricePaise: 13500 },
+    { labelEn: "1 kg", labelMl: "1 കി.ഗ്രാം", quantity: 1000, unitType: "weight", pricePaise: 54000 },
+  ]),
+  packed("thair-mulaku", "Curd Chilli (Thair Mulaku)", "തൈർ മുളക്", "spices", "🌶️", "0904", 5, [
+    { labelEn: "100 g", labelMl: "100 ഗ്രാം", quantity: 100, unitType: "weight", pricePaise: 2000 },
+  ]),
+  packed("malli", "Coriander Seeds (Malli)", "മല്ലി", "spices", "🟤", "0909", 5, [
+    { labelEn: "250 g", labelMl: "250 ഗ്രാം", quantity: 250, unitType: "weight", pricePaise: 5500 },
+    { labelEn: "1 kg", labelMl: "1 കി.ഗ്രാം", quantity: 1000, unitType: "weight", pricePaise: 22000 },
+  ]),
+  packed("kodampuli", "Kodampuli", "കുടംപുളി", "spices", "🟫", "0810", 5, [
+    { labelEn: "250 g", labelMl: "250 ഗ്രാം", quantity: 250, unitType: "weight", pricePaise: 7500 },
+    { labelEn: "1 kg", labelMl: "1 കി.ഗ്രാം", quantity: 1000, unitType: "weight", pricePaise: 30000 },
+  ]),
+  packed("valan-puli", "Valan Puli", "വാളൻ പുളി", "spices", "🟫", "0810", 5, [
+    { labelEn: "100 g", labelMl: "100 ഗ്രാം", quantity: 100, unitType: "weight", pricePaise: 2000 },
+    { labelEn: "250 g", labelMl: "250 ഗ്രാം", quantity: 250, unitType: "weight", pricePaise: 5000 },
   ]),
 
   // ── Dairy & eggs ──────────────────────────────────────────────────────────
@@ -579,7 +731,7 @@ export const seedPackedProducts: SeedPackedProduct[] = [
     "🥥",
     "0801",
     0,
-    [{ labelEn: "1 piece", labelMl: "1 എണ്ണം", quantity: 1, unitType: "unit", pricePaise: 4000 }],
+    [{ labelEn: "1 kg", labelMl: "1 കി.ഗ്രാം", quantity: 1000, unitType: "weight", pricePaise: 7000 }],
     { stockUnits: 150 },
   ),
   packed(
@@ -614,6 +766,68 @@ export const seedPackedProducts: SeedPackedProduct[] = [
     [{ labelEn: "1 litre", labelMl: "1 ലിറ്റർ", quantity: 1, unitType: "unit", pricePaise: 14500 }],
     { stockUnits: 0, lowStockUnits: 10 },
   ),
+  packed("ruchi-gold", "Ruchi Gold (Palm Oil)", "റുച്ചി ഗോൾഡ്", "coconut-and-oils", "🛢️", "1511", 5, [
+    { labelEn: "500 g", labelMl: "500 ഗ്രാം", quantity: 500, unitType: "weight", pricePaise: 8000 },
+    { labelEn: "1 kg", labelMl: "1 കി.ഗ്രാം", quantity: 1000, unitType: "weight", pricePaise: 15000 },
+  ]),
+  packed(
+    "sunrich-sunflower",
+    "Sunrich Sunflower Oil",
+    "സൺറിച്ച് സൺഫ്ലവർ ഓയിൽ",
+    "coconut-and-oils",
+    "🌻",
+    "1512",
+    5,
+    [
+      { labelEn: "500 g", labelMl: "500 ഗ്രാം", quantity: 500, unitType: "weight", pricePaise: 9000 },
+      { labelEn: "1 kg", labelMl: "1 കി.ഗ്രാം", quantity: 1000, unitType: "weight", pricePaise: 18000 },
+    ],
+  ),
+  packed(
+    "gold-winner-sunflower",
+    "Gold Winner Sunflower Oil",
+    "ഗോൾഡ് വിന്നർ സൺഫ്ലവർ ഓയിൽ",
+    "coconut-and-oils",
+    "🌻",
+    "1512",
+    5,
+    [
+      { labelEn: "500 g", labelMl: "500 ഗ്രാം", quantity: 500, unitType: "weight", pricePaise: 9500 },
+      { labelEn: "1 kg", labelMl: "1 കി.ഗ്രാം", quantity: 1000, unitType: "weight", pricePaise: 19000 },
+    ],
+  ),
+  packed("rice-bran-oil", "Rice Bran Oil", "റൈസ് ബ്രാൻ ഓയിൽ", "coconut-and-oils", "🌾", "1512", 5, [
+    { labelEn: "1 kg", labelMl: "1 കി.ഗ്രാം", quantity: 1000, unitType: "weight", pricePaise: 18000 },
+  ]),
+  packed("kera-coconut-oil", "Kera Coconut Oil", "കേര തേങ്ങാണ്ണ", "coconut-and-oils", "🫗", "1513", 5, [
+    { labelEn: "500 g", labelMl: "500 ഗ്രാം", quantity: 500, unitType: "weight", pricePaise: 11000 },
+    { labelEn: "1 kg", labelMl: "1 കി.ഗ്രാം", quantity: 1000, unitType: "weight", pricePaise: 22000 },
+  ]),
+  packed(
+    "coconut-oil-bottle",
+    "Coconut Oil (Bottle)",
+    "തേങ്ങാണ്ണ (ബോട്ടിൽ)",
+    "coconut-and-oils",
+    "🫗",
+    "1513",
+    5,
+    [
+      {
+        labelEn: "500 g bottle",
+        labelMl: "500 ഗ്രാം ബോട്ടിൽ",
+        quantity: 500,
+        unitType: "weight",
+        pricePaise: 15000,
+      },
+      {
+        labelEn: "1 kg bottle",
+        labelMl: "1 കി.ഗ്രാം ബോട്ടിൽ",
+        quantity: 1000,
+        unitType: "weight",
+        pricePaise: 29000,
+      },
+    ],
+  ),
 
   // ── Snacks & bakery ───────────────────────────────────────────────────────
   packed(
@@ -646,21 +860,29 @@ export const seedPackedProducts: SeedPackedProduct[] = [
   packed("bread", "Sandwich Bread", "ബ്രെഡ്", "snacks-and-bakery", "🍞", "1905", 5, [
     { labelEn: "400 g", labelMl: "400 ഗ്രാം", quantity: 1, unitType: "unit", pricePaise: 4500 },
   ]),
+  packed("pappadam", "Pappadam", "പപ്പടം", "snacks-and-bakery", "🫓", "1905", 5, [
+    { labelEn: "100 g", labelMl: "100 ഗ്രാം", quantity: 100, unitType: "weight", pricePaise: 1500 },
+    { labelEn: "40 pcs", labelMl: "40 എണ്ണം", quantity: 40, unitType: "unit", pricePaise: 5000 },
+  ]),
+  packed("chakram-pappadam", "Chakram Pappadam", "ചക്രം പപ്പടം", "snacks-and-bakery", "🫓", "1905", 5, [
+    { labelEn: "100 g", labelMl: "100 ഗ്രാം", quantity: 100, unitType: "weight", pricePaise: 1500 },
+  ]),
   packed("tea-dust", "Tea Dust", "ചായപ്പൊടി", "groceries", "🍵", "0902", 5, [
-    { labelEn: "250 g", labelMl: "250 ഗ്രാം", quantity: 250, unitType: "weight", pricePaise: 9500 },
-    { labelEn: "500 g", labelMl: "500 ഗ്രാം", quantity: 500, unitType: "weight", pricePaise: 18000 },
+    { labelEn: "250 g", labelMl: "250 ഗ്രാം", quantity: 250, unitType: "weight", pricePaise: 6500 },
+    { labelEn: "500 g", labelMl: "500 ഗ്രാം", quantity: 500, unitType: "weight", pricePaise: 13000 },
   ]),
   packed("coffee-powder", "Coffee Powder (70:30)", "കാപി പൊടി", "groceries", "☕", "0901", 5, [
     { labelEn: "200 g", labelMl: "200 ഗ്രാം", quantity: 200, unitType: "weight", pricePaise: 13000 },
   ]),
   packed("sugar", "Sugar", "പഞ്ചസാര", "groceries", "🧂", "1701", 5, [
-    { labelEn: "1 kg", labelMl: "1 കി.ഗ്രാം", quantity: 1000, unitType: "weight", pricePaise: 4800 },
+    { labelEn: "1 kg", labelMl: "1 കി.ഗ്രാം", quantity: 1000, unitType: "weight", pricePaise: 5500 },
   ]),
   packed("salt", "Iodised Salt", "ഉപ്പ്", "groceries", "🧂", "2501", 5, [
-    { labelEn: "1 kg", labelMl: "1 കി.ഗ്രാം", quantity: 1000, unitType: "weight", pricePaise: 2500 },
+    { labelEn: "1 kg", labelMl: "1 കി.ഗ്രാം", quantity: 1000, unitType: "weight", pricePaise: 1500 },
   ]),
   packed("jaggery", "Jaggery (Block)", "ശർക്കര", "groceries", "🟫", "1702", 5, [
-    { labelEn: "500 g", labelMl: "500 ഗ്രാം", quantity: 500, unitType: "weight", pricePaise: 6000 },
+    { labelEn: "500 g", labelMl: "500 ഗ്രാം", quantity: 500, unitType: "weight", pricePaise: 4000 },
+    { labelEn: "1 kg", labelMl: "1 കി.ഗ്രാം", quantity: 1000, unitType: "weight", pricePaise: 8000 },
   ]),
 ];
 

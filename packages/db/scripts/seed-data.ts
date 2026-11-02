@@ -145,7 +145,7 @@ const loose = (
 
 export const seedLooseProducts: SeedLooseProduct[] = [
   // ── Vegetables (36 items; prices ≈ Kerala market, Oct 2026) ───────────────
-  loose("tomato", "Tomato", "തക്കാളി", "vegetables", "🍅", 3200, "0702", { freshToday: true }),
+  loose("tomato", "Tomato", "തക്കാളി", "vegetables", "🍅", 3500, "0702", { freshToday: true }),
   loose("big-onion", "Onion (Big)", "വലിയ ഉള്ളി", "vegetables", "🧅", 4200, "0703", { freshToday: true }),
   loose("shallots", "Shallots", "ചെറുള്ളി", "vegetables", "🧅", 9500, "0703", {
     keywords: "small onion kunjulli cherulli",
@@ -154,7 +154,10 @@ export const seedLooseProducts: SeedLooseProduct[] = [
   loose("green-chilli", "Green Chilli", "പച്ചമുളക്", "vegetables", "🌶️", 7000, "0709", {
     steps: [100, 250, 500, 1000],
   }),
-  loose("brinjal", "Brinjal", "വഴുതന", "vegetables", "🍆", 4500, "0709", { freshToday: true }),
+  loose("brinjal", "Brinjal", "വഴുതന", "vegetables", "🍆", 3500, "0709", { freshToday: true }),
+  loose("brinjal-black-big", "Brinjal (Black Big)", "കറുത്ത വഴുതന", "vegetables", "🍆", 3500, "0709", {
+    keywords: "black brinjal karutha vazhuthana big eggplant",
+  }),
   loose("bitter-gourd", "Bitter Gourd", "പാവയ്ക്ക", "vegetables", "🥒", 5500, "0709"),
   loose("snake-gourd", "Snake Gourd", "പടവലം", "vegetables", "🥒", 4000, "0709", {
     keywords: "padavalam",
@@ -168,12 +171,21 @@ export const seedLooseProducts: SeedLooseProduct[] = [
   loose("garlic", "Garlic", "വെളുത്തുള്ളി", "vegetables", "🧄", 17000, "0709"),
   loose("carrot", "Carrot", "കാരറ്റ്", "vegetables", "🥕", 6000, "0706", { freshToday: true }),
   loose("beetroot", "Beetroot", "ബീറ്റ്റൂട്ട്", "vegetables", "🫒", 4500, "0706"),
-  loose("cabbage", "Cabbage", "കാബേജ്", "vegetables", "🥬", 2800, "0704"),
   loose("cauliflower", "Cauliflower", "കോളിഫ്ലവർ", "vegetables", "🥦", 5500, "0704"),
   loose("ash-gourd", "Ash Gourd", "കുംബളം", "vegetables", "🎃", 2400, "0709", {
     keywords: "kumbalanga",
   }),
-  loose("pumpkin", "Pumpkin", "മത്തൻ", "vegetables", "🎃", 2800, "0709", { keywords: "mathanga" }),
+  loose("pumpkin", "Pumpkin", "മത്തൻ", "vegetables", "🎃", 3500, "0709", {
+    keywords: "mathanga yellow pumpkin",
+  }),
+  loose("pumpkin-disco", "Pumpkin (Disco)", "ഡിസ്കോ മത്തൻ", "vegetables", "🎃", 3500, "0709", {
+    keywords: "disco mathanga hybrid pumpkin orange",
+    freshToday: true,
+  }),
+  loose("chow-chow", "Chow Chow", "ചൗചൗ", "vegetables", "🥒", 3500, "0709", {
+    keywords: "chow chow chayote bangalore kathrikai sechuan educheakai",
+    freshToday: true,
+  }),
   loose("cucumber", "Cucumber", "വെള്ളരിക്ക", "vegetables", "🥒", 3600, "0707", {
     keywords: "vellirikka",
   }),
@@ -198,8 +210,8 @@ export const seedLooseProducts: SeedLooseProduct[] = [
   loose("french-beans", "French Beans", "ബീൻസ്", "vegetables", "🫛", 9500, "0708", {
     stockGrams: 4000,
   }),
-  loose("ivy-gourd", "Ivy Gourd", "കോവയ്ക്ക", "vegetables", "🥒", 4500, "0709", {
-    keywords: "kovakka kovakkai tendli",
+  loose("ivy-gourd", "Ivy Gourd", "കോവയ്ക്ക", "vegetables", "🥒", 3500, "0709", {
+    keywords: "kovakka kovakkai tendli cocciniea",
     freshToday: true,
   }),
   loose("ridge-gourd", "Ridge Gourd", "പീച്ചിൽ", "vegetables", "🥒", 4000, "0709", {
@@ -254,6 +266,11 @@ export const seedLooseProducts: SeedLooseProduct[] = [
     freshToday: true,
   }),
   loose("guava", "Guava", "പേരക്ക", "fruits", "🍏", 6000, "0804", { keywords: "perakka" }),
+  loose("guava-jumbo", "Jumbo Guava", "ജംബോ പേരക്ക", "fruits", "🍏", 14900, "0804", {
+    keywords: "jumbo guava perakka large taiwan guava",
+    steps: [500, 1000, 2000],
+    freshToday: true,
+  }),
   loose("sapota", "Sapota", "സപ്പോട്ട", "fruits", "🟤", 7000, "0810", {
     keywords: "chikoo sapotta",
     stockGrams: 5000,
@@ -262,7 +279,17 @@ export const seedLooseProducts: SeedLooseProduct[] = [
   loose("apple", "Apple (Shimla)", "ആപ്പിൾ", "fruits", "🍎", 18000, "0808", {
     steps: [500, 1000, 2000],
   }),
-  loose("orange", "Orange", "ഓറഞ്ച്", "fruits", "🍊", 12000, "0805", { steps: [500, 1000, 2000] }),
+  loose("apple-jammu", "Apple (Jammu)", "ജമ്മു ആപ്പിൾ", "fruits", "🍎", 19900, "0808", {
+    keywords: "jammu kashmir apple red delicious",
+    steps: [500, 1000, 2000],
+    freshToday: true,
+  }),
+  loose("orange", "Orange", "ഓറഞ്ച്", "fruits", "🍊", 8900, "0805", { steps: [500, 1000, 2000] }),
+  loose("mandarin", "Mandarin", "മാൻഡരിൻ ഓറഞ്ച്", "fruits", "🍊", 22900, "0805", {
+    keywords: "mandarin kinnow orange china orange",
+    steps: [500, 1000, 2000],
+    freshToday: true,
+  }),
   loose("avocado", "Avocado", "അവക്കാഡോ", "fruits", "🥑", 25000, "0804", {
     steps: [250, 500, 1000],
     stockGrams: 6000,
@@ -319,6 +346,23 @@ const packed = (
 ): SeedPackedProduct => ({ slug, nameEn, nameMl, cat, emoji, hsn, gstRate, variants, ...extra });
 
 export const seedPackedProducts: SeedPackedProduct[] = [
+  // ── Fresh produce sold per piece ───────────────────────────────────────────
+  packed("cabbage", "Cabbage (Whole)", "കാബേജ്", "vegetables", "🥬", "0704", 0, [
+    { labelEn: "1 pc", labelMl: "1 എണ്ണം", quantity: 1, unitType: "unit", pricePaise: 3500 },
+  ]),
+  packed("cabbage-red", "Red Cabbage (Whole)", "ചുവന്ന കാബേജ്", "vegetables", "🥬", "0704", 0, [
+    { labelEn: "1 pc", labelMl: "1 എണ്ണം", quantity: 1, unitType: "unit", pricePaise: 3500 },
+  ]),
+  packed("zucchini-green", "Green Zucchini", "പച്ച സുക്കിനി", "vegetables", "🥒", "0709", 0, [
+    { labelEn: "1 pc", labelMl: "1 എണ്ണം", quantity: 1, unitType: "unit", pricePaise: 3500 },
+  ]),
+  packed("zucchini-yellow", "Yellow Zucchini", "മഞ്ഞ സുക്കിനി", "vegetables", "🥒", "0709", 0, [
+    { labelEn: "1 pc", labelMl: "1 എണ്ണം", quantity: 1, unitType: "unit", pricePaise: 3500 },
+  ]),
+  packed("lettuce", "Lettuce", "ലെറ്റ്യൂസ്", "leafy-greens", "🥬", "0705", 0, [
+    { labelEn: "1 pc", labelMl: "1 എണ്ണം", quantity: 1, unitType: "unit", pricePaise: 3500 },
+  ]),
+
   // ── Rice & grains ─────────────────────────────────────────────────────────
   packed(
     "matta-rice",

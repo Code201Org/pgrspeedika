@@ -1,5 +1,22 @@
-import { index, integer, jsonb, pgEnum, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
+import {
+  customType,
+  index,
+  integer,
+  jsonb,
+  pgEnum,
+  pgTable,
+  text,
+  timestamp,
+  uuid,
+} from "drizzle-orm/pg-core";
 import { user } from "./auth";
+
+/** Raw binary column for small owner-uploaded product photos. */
+const bytea = customType<{ data: Buffer; driverData: Buffer }>({
+  dataType() {
+    return "bytea";
+  },
+});
 
 export const outboxStatusEnum = pgEnum("outbox_status", ["pending", "processing", "processed", "dead"]);
 
@@ -55,3 +72,21 @@ export const settings = pgTable("settings", {
   value: jsonb("value").$type<Record<string, unknown>>().notNull(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
 });
+
+/**
+ * Owner-uploaded photos (product/category/banner images added from the admin
+ * panel, usually a phone camera). Stored in Postgres so they survive
+ * container restarts without object storage; served by /api/media/:id.
+ */
+export const mediaAssets = pgTable(
+  "media_assets",
+  {
+    id: text("id").primaryKey(),
+    mime: text("mime").notNull(),
+    bytes: bytea("bytes").notNull(),
+    sizeBytes: integer("size_bytes").notNull(),
+    uploadedBy: text("uploaded_by").references(() => user.id, { onDelete: "set null" }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index("media_assets_created_idx").on(t.createdAt)],
+);

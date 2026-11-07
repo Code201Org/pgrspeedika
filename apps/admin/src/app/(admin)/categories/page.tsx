@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { Pencil, Plus, Trash2 } from "lucide-react";
 import { Alert, Badge, Button, Card, Field, Input } from "@pgrs/ui";
 import { api, unwrap } from "@/lib/api";
+import { PhotoInput } from "@/components/photo-input";
 
 interface AdminCategory {
   id: string;
@@ -126,9 +127,13 @@ export default function CategoriesPage() {
               onChange={(e) => setForm({ ...form, description: e.target.value })}
             />
           </Field>
-          <Field label="Image URL (optional)">
-            <Input value={form.imageUrl} onChange={(e) => setForm({ ...form, imageUrl: e.target.value })} />
-          </Field>
+          <div className="sm:col-span-2">
+            <PhotoInput
+              label="Category photo (optional)"
+              value={form.imageUrl}
+              onChange={(imageUrl) => setForm({ ...form, imageUrl })}
+            />
+          </div>
           <Field label="Sort order">
             <Input
               type="number"

@@ -5,8 +5,8 @@ import { seedAll } from "../src/seed";
 async function main() {
   const ownerEmail = process.env.SEED_OWNER_EMAIL || "owner@pgrspeedika.example";
   const ownerPassword = process.env.SEED_OWNER_PASSWORD;
-  if (!ownerPassword || ownerPassword.length < 10) {
-    throw new Error("SEED_OWNER_PASSWORD must be set (10+ characters)");
+  if (!ownerPassword || ownerPassword.length < 8) {
+    throw new Error("SEED_OWNER_PASSWORD must be set (8+ characters)");
   }
   await seedAll(getDb(), { ownerEmail, ownerPassword });
   console.log("  Password: from SEED_OWNER_PASSWORD");

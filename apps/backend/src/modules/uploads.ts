@@ -3,8 +3,10 @@ import { zValidator } from "@hono/zod-validator";
 import { randomUUID } from "node:crypto";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { eq } from "drizzle-orm";
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { schema } from "@pgrs/db";
 import { uploadRequestSchema } from "@pgrs/contracts";
 import type { AppContext } from "../lib/app-context";
 import { notFound, ok } from "../lib/errors";
@@ -14,6 +16,10 @@ import { log } from "../lib/app-context";
 const MAX_BODY_BYTES = 10 * 1024 * 1024;
 /** Keys are strictly `uploads/<date>/<uuid>.<ext>` — nothing else is accepted. */
 const SAFE_KEY_PATTERN = /^uploads\/\d{4}-\d{2}-\d{2}\/[0-9a-f-]{36}\.[a-z0-9]{2,8}$/;
+/** Phone-camera photos arrive as base64 data URLs of these raster types. */
+const DATA_URL_PATTERN = /^data:(image\/(?:webp|jpeg|png|gif));base64,([A-Za-z0-9+/=]+)$/;
+const MAX_DB_IMAGE_BYTES = 2 * 1024 * 1024;
+const MEDIA_ID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 
 function safeKey(fileName: string): string {
   const ext = path
@@ -143,6 +149,53 @@ export function uploadRoutes(ctx: AppContext) {
         } catch {
           throw notFound("Upload not found");
         }
+      })
+      // Durable product photos: staff POSTs a base64 data URL (the admin app
+      // compresses camera images in the browser before sending); bytes live in
+      // Postgres so they survive restarts without object storage.
+      .post("/api/uploads/image", requireStaff(ctx, "catalog:manage"), async (c) => {
+        const body = (await c.req.json().catch(() => null)) as { data?: unknown } | null;
+        const match = typeof body?.data === "string" ? body.data.match(DATA_URL_PATTERN) : null;
+        const [, mime, base64] = match ?? [];
+        if (!mime || !base64) {
+          return c.json(
+            { ok: false as const, code: "VALIDATION_ERROR", message: "Expected a base64 data:image/… URL" },
+            400,
+          );
+        }
+        const bytes = Buffer.from(base64, "base64");
+        if (bytes.byteLength === 0 || bytes.byteLength > MAX_DB_IMAGE_BYTES) {
+          return c.json(
+            {
+              ok: false as const,
+              code: "VALIDATION_ERROR",
+              message: "Image must be under 2 MB after compression",
+            },
+            413,
+          );
+        }
+        const user = c.get("user");
+        const id = randomUUID();
+        await ctx.db
+          .insert(schema.mediaAssets)
+          .values({ id, mime, bytes, sizeBytes: bytes.byteLength, uploadedBy: user?.id ?? null });
+        const origin = new URL(ctx.env.BETTER_AUTH_URL).origin;
+        log("uploads").info({ id, mime, bytes: bytes.byteLength }, "stored media asset");
+        return c.json(ok({ id, url: `${origin}/api/media/${id}` }));
+      })
+      // Public, CDN-cacheable photo serving for storefront <img> tags.
+      .get("/api/media/:id", async (c) => {
+        const id = c.req.param("id");
+        if (!MEDIA_ID_PATTERN.test(id)) throw notFound("Not found");
+        const [asset] = await ctx.db.select().from(schema.mediaAssets).where(eq(schema.mediaAssets.id, id));
+        if (!asset) throw notFound("Not found");
+        return new Response(new Uint8Array(asset.bytes), {
+          headers: {
+            "content-type": asset.mime,
+            "cache-control": "public, max-age=31536000, immutable",
+            etag: `"${id}"`,
+          },
+        });
       })
   );
 }

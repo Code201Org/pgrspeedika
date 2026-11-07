@@ -21,6 +21,7 @@ import {
 } from "@pgrs/ui";
 import { API_URL, api, unwrap } from "@/lib/api";
 import { DataTable } from "@/components/data-table";
+import { PhotoInput } from "@/components/photo-input";
 
 interface AdminVariant {
   id: string;
@@ -526,13 +527,13 @@ export default function AdminProductsPage() {
               </Select>
             </Field>
           </div>
-          <Field label="Product image URL (optional)">
-            <Input
-              placeholder="https://… or /media/…"
+          <div className="mt-1">
+            <PhotoInput
+              label="Product photo (optional)"
               value={form.imageUrl}
-              onChange={(e) => setForm({ ...form, imageUrl: e.target.value })}
+              onChange={(imageUrl) => setForm({ ...form, imageUrl })}
             />
-          </Field>
+          </div>
           <Field label="Description" className="mt-1">
             <Textarea
               value={form.description}

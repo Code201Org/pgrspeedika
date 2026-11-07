@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { Plus, Trash2 } from "lucide-react";
 import { Badge, Button, Card, Field, Input } from "@pgrs/ui";
 import { api, unwrap } from "@/lib/api";
+import { PhotoInput } from "@/components/photo-input";
 
 interface Banner {
   id: string;
@@ -92,9 +93,11 @@ export default function BannersPage() {
         <Field label="Subtitle (EN)">
           <Input value={form.subtitleEn} onChange={(e) => setForm({ ...form, subtitleEn: e.target.value })} />
         </Field>
-        <Field label="Image URL" hint="Upload first, then paste the URL here">
-          <Input value={form.imageUrl} onChange={(e) => setForm({ ...form, imageUrl: e.target.value })} />
-        </Field>
+        <PhotoInput
+          label="Banner photo"
+          value={form.imageUrl}
+          onChange={(imageUrl) => setForm({ ...form, imageUrl })}
+        />
         <Field label="Link URL">
           <Input value={form.linkUrl} onChange={(e) => setForm({ ...form, linkUrl: e.target.value })} />
         </Field>

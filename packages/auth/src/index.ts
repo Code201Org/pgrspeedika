@@ -62,7 +62,11 @@ export function createAuth(options: CreateAuthOptions) {
     advanced: {
       useSecureCookies: process.env.NODE_ENV === "production",
       defaultCookieAttributes: {
-        sameSite: "lax",
+        // Production storefronts run on their own domain (e.g. pgrspeedika.com)
+        // while the API lives on Railway — cross-site cookies must be
+        // SameSite=None or browsers silently drop sign-in/cart sessions there.
+        // Better Auth's trustedOrigins check remains the CSRF defence.
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       },
     },
     user: {

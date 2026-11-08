@@ -54,10 +54,16 @@ export function buildApp() {
   });
 
   // CORS locked to known browser origins, credentials allowed for cookies.
+  // The CDN caches by URL and ignores `Vary: Origin`, so a response fetched
+  // without an Origin header (curl, server-side rewrites, prefetchers) would
+  // otherwise poison the entry for the storefront's credentialed fetches —
+  // fall back to the web origin so every cached copy stays CORS-valid for it.
+  // Unknown origins still fail the browser's own origin match.
+  const webOrigin = env.WEB_URL.replace(/\/$/, "");
   app.use(
     "*",
     cors({
-      origin: (origin) => (env.CORS_ORIGINS.includes(origin) ? origin : null),
+      origin: (origin) => (env.CORS_ORIGINS.includes(origin) ? origin : webOrigin),
       allowMethods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
       allowHeaders: ["content-type", "authorization", "x-razorpay-signature"],
       credentials: true,
